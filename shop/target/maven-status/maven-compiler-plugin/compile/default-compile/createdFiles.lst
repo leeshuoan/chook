@@ -1,0 +1,7 @@
+esd\shop\shop\Shop.class
+esd\shop\shop\ShopService.class
+esd\shop\ShopApplication.class
+esd\shop\shop\ShopNotFoundException.class
+esd\shop\shop\ShopController.class
+esd\shop\shop\ShopExistsException.class
+esd\shop\shop\ShopRepository.class

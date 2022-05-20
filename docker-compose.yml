@@ -1,0 +1,180 @@
+version: "3.8"
+
+volumes:
+  rabbitmq_data:
+  
+
+services:
+
+  ####################################
+  # RabbitMQ: The messaging broker   
+  ####################################
+  rabbitmq:
+    image: rabbitmq:3.9-management
+    hostname: chook-rabbit
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes: 
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+      interval: 5s
+      timeout: 15s
+      retries: 1
+
+  ###################################
+  # Appointment: The Appointment microservice
+  ###################################
+  appointment:
+    build:
+      context: ./
+      dockerfile: appointment.Dockerfile
+    image: leeshuoan/appointment:chook
+    restart: always
+    environment:
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/mydb_appointment
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5000:5000"
+
+  #######################################################
+  # Auth: The Auth microservice
+  #######################################################
+  auth:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    image: leeshuoan/auth:chook
+    restart: always
+    ports:
+      - "5001:5001"
+  #######################################################
+  # Queue: The Queue microservice
+  #######################################################
+  queue:
+    build:
+      context: ./queue
+      dockerfile: Dockerfile
+    image: leeshuoan/queue:chook
+    restart: always
+    ports:
+      - "5002:5002"
+
+  #######################################################
+  # Services: The Services microservice
+  #######################################################
+  services:
+    build:
+      context: ./
+      dockerfile: services.Dockerfile
+    image: leeshuoan/services:chook
+    restart: always
+    environment:
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/mydb_service
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5003:5003"
+
+  #######################################################
+  # sms: The Twilio microservice
+  #######################################################
+  sms:
+    build:
+      context: ./
+      dockerfile: sms.Dockerfile
+    image: leeshuoan/sms:chook
+    restart: always
+    depends_on:
+      - rabbitmq
+    environment:
+      rabbit_host: rabbitmq
+      rabbit_port: 5672
+      account_sid: redacted
+      auth_token: redacted
+      service_id: redacted
+      PYTHONUNBUFFERED: 1
+    #ports:
+    #  - "5004:5004"
+  
+  #######################################################
+  # Shop: The Shop microservice 
+  #######################################################
+  shop:
+    build:
+      context: ./shop
+      dockerfile: Dockerfile
+    image: leeshuoan/shop:chook
+    restart: always
+    ports:
+      - "5005:5005"
+
+  ######################################################
+  # telebot: The telebot microservice
+  ######################################################
+  telebot:
+    build:
+      context: ./telebot
+      dockerfile: Dockerfile
+    image: leeshuoan/telebot:chook
+    restart: always
+    depends_on:
+      - rabbitmq
+    environment:
+      AMQP_URL: amqp://guest:guest@rabbitmq:5672
+      telegraf_id: redacted
+      bot_id: 1 
+      shop_name: Jason's Hair Studio
+
+  #######################################################
+  # Appointment Management: The Appointment Management complex microservice
+  #######################################################
+  appointment_management:
+    build:
+      context: ./
+      dockerfile: appointment_management.Dockerfile
+    image: leeshuoan/appointment_management:chook
+    restart: always
+    depends_on:
+      - services
+      - shop
+      - sms
+      - appointment
+      - auth
+      - rabbitmq
+    environment:
+      dbURL: mysql+mysqlconnector://is213@host.docker.internal:3306/mydb_appointment
+      rabbit_host: rabbitmq
+      rabbit_port: 5672
+      appointment_URL: http://appointment:5000/allAppointments/
+      shop_appointment_URL: http://appointment:5000/allShopAppointments/
+      book_appt_URL: http://appointment:5000/bookAppointment/ 
+      confirm_appointment_URL: http://appointment:5000/confirmAppointment/
+      reject_appointment_URL: http://appointment:5000/rejectAppointment/
+      auth_URL: redacted
+      service_URL: http://services:5003 
+      shop_URL: http://shop:5005/allShops 
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5100:5100"
+
+  #######################################################
+  # Queue Management: The Queue Management complex microservice
+  #######################################################
+  queue_management:
+    build:
+      context: ./
+      dockerfile: queue_management.Dockerfile
+    image: leeshuoan/queue_management:chook
+    restart: always
+    depends_on:
+      - queue
+      - rabbitmq
+    environment:
+      rabbit_host: rabbitmq
+      rabbit_port: 5672
+      queue_URL: http://queue:5002
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "5101:5101"

@@ -1,0 +1,158 @@
+* {
+  font-family: "Signika", sans-serif;
+}
+
+.navbar {
+  background: none;
+}
+
+.nav-link {
+  color: #000000;
+  text-decoration: none;
+  margin-right: 80px;
+}
+
+.nav-link:hover {
+  color: #196e63;
+}
+
+.nav-link:active {
+  color: #196e63;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 25px;
+  background: #eeeeee;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #196e63;
+  cursor: pointer;
+  border-radius: 30px;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #196e63;
+  cursor: pointer;
+}
+
+.values {
+  font-weight: 100;
+}
+
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px;
+  }
+  .sidenav a {
+    font-size: 18px;
+  }
+}
+
+.refresh,
+.book {
+  color: white;
+  background-color: #196e63;
+}
+
+.qinfo {
+  border-radius: 30px;
+  border-color: grey;
+}
+
+.telebotlink {
+  background-color: #ea6041;
+  color: white;
+  font-size: smaller;
+  border-radius: 0px 10px 10px 0px;
+}
+
+#telebotlink {
+  color: white;
+}
+
+.services,
+.book {
+  border-radius: 10px;
+}
+
+.book {
+  font-size: small;
+}
+
+.price,
+#servicename {
+  color: #196e63;
+}
+
+.edit {
+  background-color: #ed6749;
+  color: white;
+  border-radius: 15px;
+}
+
+.cancel {
+  background-color: #751e0c;
+  color: white;
+  border-radius: 15px;
+}
+
+#status {
+  color: #818181;
+}
+
+.rebook {
+  background-color: #ed6749;
+  font-size: small;
+  color: white;
+}

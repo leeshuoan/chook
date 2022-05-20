@@ -1,0 +1,14 @@
+### Post a shop
+POST http://localhost:5005/allShops/nihao
+Content-Type: application/json
+
+{
+    "name":"Yogurt",
+    "location":"TiongBahru",
+    "shop_url":"hello",
+    "tele_url": "testing",
+    "telegram_bot_bot_id":2,
+    "bot_id":3
+}
+###
+GET http://localhost:5005/allShops/
