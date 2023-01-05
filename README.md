@@ -1,4 +1,4 @@
-# Hello! Welcome to Chook.
+# Hello! Welcome to Chook. [Project Grade: A+]
 
 ## How to run 
 To set up our web application locally based on the .zip file
